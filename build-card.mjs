@@ -1,6 +1,7 @@
-import { createCanvas } from "@napi-rs/canvas";
+import { createCanvas, loadImage } from "@napi-rs/canvas";
 import { Document, NodeIO } from "@gltf-transform/core";
 import { writeFileSync, mkdirSync } from "node:fs";
+import QRCode from "qrcode";
 
 // ---- 1. Draw the card face texture ----
 const TW = 1024, TH = 646; // ~85.6 x 54mm aspect ratio
@@ -41,6 +42,29 @@ ctx.stroke();
 ctx.fillStyle = "#cbd5e1";
 ctx.font = "400 30px Arial";
 ctx.fillText("n35704@gmail.com", 70, 510);
+
+// QR code -> opens the AR page
+const SITE_URL = "https://n35704.github.io/tarjeta-ar/";
+const qrBuffer = await QRCode.toBuffer(SITE_URL, {
+  type: "png",
+  margin: 1,
+  color: { dark: "#0f1720ff", light: "#ffffffff" },
+  width: 400,
+});
+const qrImg = await loadImage(qrBuffer);
+const QR_SIZE = 190;
+const qrX = TW - QR_SIZE - 60;
+const qrY = (TH - QR_SIZE) / 2;
+const pad = 10;
+ctx.fillStyle = "#ffffff";
+ctx.fillRect(qrX - pad, qrY - pad, QR_SIZE + pad * 2, QR_SIZE + pad * 2);
+ctx.drawImage(qrImg, qrX, qrY, QR_SIZE, QR_SIZE);
+
+ctx.fillStyle = "#8fa3b8";
+ctx.font = "400 20px Arial";
+ctx.textAlign = "center";
+ctx.fillText("Escanea para ver en AR", qrX + QR_SIZE / 2, qrY + QR_SIZE + pad + 26);
+ctx.textAlign = "left";
 
 const pngBuffer = await canvas.encode("png");
 mkdirSync("assets", { recursive: true });

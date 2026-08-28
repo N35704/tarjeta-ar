@@ -12,6 +12,7 @@
   "type": "commonjs",
   "devDependencies": {
     "@gltf-transform/core": "^4.4.2",
-    "@napi-rs/canvas": "^1.0.8"
+    "@napi-rs/canvas": "^1.0.8",
+    "qrcode": "^1.5.4"
   }
 }
