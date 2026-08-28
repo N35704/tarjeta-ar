@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tarjeta AR</title>
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #000; }
+    #hint {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 10;
+      text-align: center;
+      padding: 14px 16px;
+      font: 600 14px -apple-system, sans-serif;
+      color: #fff;
+      background: linear-gradient(rgba(0,0,0,.55), transparent);
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="hint">Apunta la cámara a la tarjeta impresa</div>
+
+  <a-scene
+    mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: true; uiScanning: true; uiLoading: yes;"
+    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: true"
+  >
+    <a-assets>
+      <a-asset-item id="card-model" src="./assets/card.glb"></a-asset-item>
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
+
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-gltf-model
+        src="#card-model"
+        position="0 0 0.15"
+        scale="8 8 8"
+        rotation="0 0 0"
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear"
+      ></a-gltf-model>
+    </a-entity>
+  </a-scene>
+</body>
+</html>
