@@ -50,12 +50,29 @@
 
   <script>
     const hint = document.getElementById("hint");
+    const scene = document.querySelector("a-scene");
+
     document.querySelector("#target").addEventListener("targetFound", () => {
       hint.textContent = "¡Tarjeta reconocida!";
     });
     document.querySelector("#target").addEventListener("targetLost", () => {
       hint.textContent = "Apunta la cámara a la tarjeta impresa";
     });
+
+    scene.addEventListener("arError", (e) => {
+      hint.style.background = "rgba(200,30,30,0.9)";
+      hint.textContent = "No se pudo acceder a la cámara. Revisa el permiso de cámara para este sitio en los ajustes del navegador y recarga la página.";
+    });
+
+    // Fallback: if the camera video never actually starts playing, the
+    // background stays black with no error event on some mobile browsers.
+    setTimeout(() => {
+      const video = document.querySelector("video");
+      if (!video || video.readyState < 2 || video.videoWidth === 0) {
+        hint.style.background = "rgba(200,30,30,0.9)";
+        hint.textContent = "La cámara no inició. Revisa que el permiso de cámara esté permitido para este sitio (en Safari/Chrome, icono 'aA' o candado en la barra de direcciones) y recarga.";
+      }
+    }, 6000);
   </script>
 </body>
 </html>
