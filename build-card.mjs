@@ -64,6 +64,7 @@ ctx.stroke();
 ctx.fillStyle = "#cbd5e1";
 ctx.font = "400 30px Arial";
 ctx.fillText("n35704@gmail.com", 70, 510);
+ctx.fillText("55 6687 4263", 70, 555);
 
 // QR code -> opens the AR page
 const SITE_URL = "https://n35704.github.io/tarjeta-ar/";

@@ -19,10 +19,22 @@
       background: linear-gradient(rgba(0,0,0,.55), transparent);
       pointer-events: none;
     }
+    #debug {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 20;
+      font: 10px/1.4 monospace;
+      color: #9f9;
+      background: rgba(0,0,0,0.75);
+      padding: 6px 8px;
+      white-space: pre-wrap;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
   <div id="hint">Apunta la cámara a la tarjeta impresa</div>
+  <div id="debug"></div>
 
   <a-scene
     mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: true; uiScanning: true; uiLoading: yes;"
@@ -33,6 +45,7 @@
   >
     <a-assets>
       <a-asset-item id="card-model" src="./assets/card.glb"></a-asset-item>
+      <a-asset-item id="programmer-model" src="./assets/programmer.glb"></a-asset-item>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
@@ -43,7 +56,13 @@
         position="0 0 0.2"
         scale="11 11 11"
         rotation="0 0 0"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear"
+      ></a-gltf-model>
+      <a-gltf-model
+        src="#programmer-model"
+        position="0.42 -0.05 0.2"
+        scale="4.5 4.5 4.5"
+        rotation="0 0 0"
+        animation="property: rotation; to: 0 360 0; loop: true; dur: 4500; easing: linear"
       ></a-gltf-model>
     </a-entity>
   </a-scene>
@@ -107,6 +126,30 @@
       if (forceVideoVisible()) clearInterval(videoFixInterval);
     }, 300);
     setTimeout(() => clearInterval(videoFixInterval), 15000);
+
+    // Live diagnostics panel: shows exactly what state the camera video is
+    // in, so a hard-to-reproduce mobile issue can be read off the screen.
+    const debug = document.getElementById("debug");
+    setInterval(() => {
+      const video = document.querySelector("video");
+      const canvas = document.querySelector("a-scene canvas");
+      const lines = [`UA: ${navigator.userAgent.slice(0, 60)}`];
+      if (video) {
+        const cs = getComputedStyle(video);
+        const r = video.getBoundingClientRect();
+        lines.push(`video: ready=${video.readyState} paused=${video.paused} src=${!!video.srcObject} ${video.videoWidth}x${video.videoHeight}`);
+        lines.push(`video css: pos=${cs.position} z=${cs.zIndex} op=${cs.opacity} disp=${cs.display} vis=${cs.visibility} rect=${Math.round(r.width)}x${Math.round(r.height)}`);
+      } else {
+        lines.push("video: NOT FOUND IN DOM");
+      }
+      if (canvas) {
+        const cs = getComputedStyle(canvas);
+        lines.push(`canvas: z=${cs.zIndex} bg=${cs.backgroundColor} op=${cs.opacity}`);
+      } else {
+        lines.push("canvas: NOT FOUND IN DOM");
+      }
+      debug.textContent = lines.join("\n");
+    }, 500);
   </script>
 </body>
 </html>
