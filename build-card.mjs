@@ -15,6 +15,28 @@ bg.addColorStop(1, "#1c2b3a");
 ctx.fillStyle = bg;
 ctx.fillRect(0, 0, TW, TH);
 
+// speckle texture — gives the image tracker lots of distinct keypoints
+// (a flat gradient alone has almost no trackable features)
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const rand = mulberry32(20260828);
+for (let i = 0; i < 1400; i++) {
+  const x = rand() * TW;
+  const y = rand() * TH;
+  const r = 0.6 + rand() * 2.2;
+  const light = rand() > 0.5;
+  ctx.fillStyle = light ? `rgba(255,255,255,${0.05 + rand() * 0.10})` : `rgba(0,0,0,${0.08 + rand() * 0.12})`;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
 // accent bar
 ctx.fillStyle = "#2dd4bf";
 ctx.fillRect(0, 0, 14, TH);

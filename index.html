@@ -37,15 +37,25 @@
 
     <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
 
-    <a-entity mindar-image-target="targetIndex: 0">
+    <a-entity id="target" mindar-image-target="targetIndex: 0">
       <a-gltf-model
         src="#card-model"
-        position="0 0 0.15"
-        scale="8 8 8"
+        position="0 0 0.2"
+        scale="11 11 11"
         rotation="0 0 0"
         animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear"
       ></a-gltf-model>
     </a-entity>
   </a-scene>
+
+  <script>
+    const hint = document.getElementById("hint");
+    document.querySelector("#target").addEventListener("targetFound", () => {
+      hint.textContent = "¡Tarjeta reconocida!";
+    });
+    document.querySelector("#target").addEventListener("targetLost", () => {
+      hint.textContent = "Apunta la cámara a la tarjeta impresa";
+    });
+  </script>
 </body>
 </html>
