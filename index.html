@@ -33,7 +33,6 @@
   >
     <a-assets>
       <a-asset-item id="card-model" src="./assets/card.glb"></a-asset-item>
-      <a-asset-item id="astronaut-model" src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"></a-asset-item>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;"></a-camera>
@@ -41,15 +40,8 @@
     <a-entity id="target" mindar-image-target="targetIndex: 0">
       <a-gltf-model
         src="#card-model"
-        position="0 -0.3 0.2"
+        position="0 0 0.2"
         scale="11 11 11"
-        rotation="0 0 0"
-        animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear"
-      ></a-gltf-model>
-      <a-gltf-model
-        src="#astronaut-model"
-        position="0 0.4 0.2"
-        scale="0.3 0.3 0.3"
         rotation="0 0 0"
         animation="property: rotation; to: 0 360 0; loop: true; dur: 5000; easing: linear"
       ></a-gltf-model>
