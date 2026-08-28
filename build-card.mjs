@@ -25,16 +25,22 @@ function mulberry32(seed) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+// Rotated squares instead of circles: corner-detector-based tracking needs
+// actual corners to lock onto — a circle's smooth edge gives a weak,
+// ambiguous response and produced a lot of tracking jitter in testing.
 const rand = mulberry32(20260828);
-for (let i = 0; i < 1400; i++) {
+for (let i = 0; i < 1200; i++) {
   const x = rand() * TW;
   const y = rand() * TH;
-  const r = 0.6 + rand() * 2.2;
+  const s = 1.2 + rand() * 4.5;
+  const angle = rand() * Math.PI * 2;
   const light = rand() > 0.5;
-  ctx.fillStyle = light ? `rgba(255,255,255,${0.05 + rand() * 0.10})` : `rgba(0,0,0,${0.08 + rand() * 0.12})`;
-  ctx.beginPath();
-  ctx.arc(x, y, r, 0, Math.PI * 2);
-  ctx.fill();
+  ctx.fillStyle = light ? `rgba(255,255,255,${0.06 + rand() * 0.12})` : `rgba(0,0,0,${0.10 + rand() * 0.14})`;
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.fillRect(-s / 2, -s / 2, s, s);
+  ctx.restore();
 }
 
 // accent bar
